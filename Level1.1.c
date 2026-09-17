@@ -29,6 +29,9 @@ int main()
         else if(strcmp(cmd,"003") == 0){
          printf("Noodles   6.00\n");
     }
+        else if(strcmp(cmd,"prices") != 0){
+            printf("ERROR: code not found\n");
+        }
     cmd = strtok(NULL," \t\n");
     }
 
