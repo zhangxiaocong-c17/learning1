@@ -41,6 +41,15 @@ int main()
         else if(strcmp(cmd,"003") == 0){
           count[2]++;
         }
+        else if(strcmp(cmd,"-001") == 0){
+          count[0]--;
+        }
+        else if(strcmp(cmd,"-002") == 0){
+          count[1]--;
+        }
+        else if(strcmp(cmd,"-003") == 0){
+          count[2]--;
+        }
         else if(strcmp(cmd,"prices") != 0){
             printf("ERROR: code not found\n");
         }
