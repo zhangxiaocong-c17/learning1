@@ -93,7 +93,11 @@ void output()// 扫描时实时输出价格
       priceproduct[i] = price[i] * count[i];
       printf("%-9s%5.2f x%-2d=%.2f\n", name[i], price[i], count[i], priceproduct[i]);
     }
-    if (count[i] < 0)
+    else if (count[i] == 0)
+    {
+      priceproduct[i] = 0;
+    }
+    else if (count[i] < 0)
     {
       count[i] = 0;
       printf("ERROR: count must not be negative number\n");
@@ -115,5 +119,7 @@ void drop()//清空记录
 {
   for(int i = 0; i<=2; i++){
     count[i] = 0;
+    priceproduct[i] = 0;
   }
+  pricetotal = 0;
 }
