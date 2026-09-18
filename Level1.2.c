@@ -11,6 +11,7 @@ char name[3][9] = {"Cola", "Lollipop", "Noodles"};
 void output();
 void receipt();
 void drop();
+char number[3][4] = {"001","002","003"};
 void setprice()
 {
   price[0] = 3.5;
@@ -54,22 +55,16 @@ int main()
     {
       while (cmd != NULL)
       {
-        if (strcmp(cmd, "001") == 0)
+        for(int i=0;i<=2;i++)
         {
-          count[0]++;
-          mark[0] = 1;
+          if (strcmp(cmd, number[i])== 0)
+          {
+            count[i]++;
+            mark[i] = 1;
+          }
         }
-        else if (strcmp(cmd, "002") == 0)
-        {
-          count[1]++;
-          mark[1] = 1;
-        }
-        else if (strcmp(cmd, "003") == 0)
-        {
-          count[2]++;
-          mark[2] = 1;
-        }
-        else if (strcmp(cmd, "-001") == 0)
+
+        if (strcmp(cmd, "-001") == 0)
         {
           count[0]--;
           mark[0] = 1;
