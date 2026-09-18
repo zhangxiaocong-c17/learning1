@@ -4,15 +4,15 @@ char input[100];
 char *cmd; // 没搞懂指针是什么先照葫芦画瓢吧
 int count[3];
 float price[3];
-int mark[3];//用于标记一次扫描是否对某件商品改动，以决定是否显示
-int success;//标记一次指令是否是已知指令
+int mark[3]; // 用于标记一次扫描是否对某件商品改动，以决定是否显示
+int success; // 标记一次指令是否是已知指令
 float pricetotal;
 float priceproduct[3];
 char name[3][9] = {"Cola", "Lollipop", "Noodles"};
 void output();
 void receipt();
 void drop();
-char number[3][4] = {"001","002","003"};
+char number[3][4] = {"001", "002", "003"};
 void setprice()
 {
   price[0] = 3.5;
@@ -31,23 +31,23 @@ int main()
     {
       break;
     } // 退出程序
-    else if (strcmp(cmd, "prices") == 0)
+    else if (strcmp(cmd, "prices") == 0) // 查询价格
     {
       printf("Item     No. Pri.\n"
              "-----------------\n"
              "Cola     001 3.50\n"
              "Lollipop 002 0.50\n"
-             "Noodles  003 6.00\n"); // 暂时不知道为什么不能一组双引号全部囊括 但是vscode标红了我就顺了它
+             "Noodles  003 6.00\n");
     }
-    else if (strcmp(cmd, "print") == 0)
+    else if (strcmp(cmd, "print") == 0) // 打印小票
     {
       receipt();
     }
-    else if (strcmp(cmd, "drop") == 0)
+    else if (strcmp(cmd, "drop") == 0) // 清空记录
     {
       drop();
     }
-    else if (strcmp(cmd, "checkout") == 0)
+    else if (strcmp(cmd, "checkout") == 0) // 结账
     {
       receipt();
       drop();
@@ -57,32 +57,26 @@ int main()
       success = 0;
       while (cmd != NULL)
       {
-        for(int i=0;i<=2;i++)
+        for (int i = 0; i <= 2; i++)
         {
-          if (strcmp(cmd, number[i])== 0)
+          if (strcmp(cmd, number[i]) == 0) // 增加商品
           {
             count[i]++;
             mark[i] = 1;
             success = 1;
           }
+          if (cmd[0] == '-')
+          {
+            if (strcmp(cmd + 1, number[i]) == 0) // 减少商品
+            {
+              count[i]--;
+              mark[i] = 1;
+              success = 1;
+            }
+          }
         }
 
-        if (strcmp(cmd, "-001") == 0)
-        {
-          count[0]--;
-          mark[0] = 1;
-        }
-        else if (strcmp(cmd, "-002") == 0)
-        {
-          count[1]--;
-          mark[1] = 1;
-        }
-        else if (strcmp(cmd, "-003") == 0)
-        {
-          count[2]--;
-          mark[2] = 1;
-        }
-        else if (success == 0)
+        if (success == 0)
         {
           printf("ERROR: code not found\n");
         }
