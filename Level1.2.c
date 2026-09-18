@@ -5,6 +5,7 @@ char *cmd; // 没搞懂指针是什么先照葫芦画瓢吧
 int count[3];
 float price[3];
 int mark[3];//用于标记一次扫描是否对某件商品改动，以决定是否显示
+int success;//标记一次指令是否是已知指令
 float pricetotal;
 float priceproduct[3];
 char name[3][9] = {"Cola", "Lollipop", "Noodles"};
@@ -53,6 +54,7 @@ int main()
     }
     else
     {
+      success = 0;
       while (cmd != NULL)
       {
         for(int i=0;i<=2;i++)
@@ -61,6 +63,7 @@ int main()
           {
             count[i]++;
             mark[i] = 1;
+            success = 1;
           }
         }
 
@@ -79,7 +82,7 @@ int main()
           count[2]--;
           mark[2] = 1;
         }
-        else if (strcmp(cmd, "prices") != 0)
+        else if (success == 0)
         {
           printf("ERROR: code not found\n");
         }
