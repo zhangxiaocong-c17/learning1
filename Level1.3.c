@@ -14,9 +14,9 @@ void receipt();
 void drop();
 void newday();
 char product_code[3][4] = {"001", "002", "003"};
-int daycount = 0;
+int daycount = 1;
+int serial_number = 1;
 FILE *fp = NULL;
-
 
 void setprice() //设置商品价格
 {
@@ -57,10 +57,16 @@ int main()
     else if (strcmp(cmd, "checkout") == 0) // 结账
     {
       receipt();
+      fprintf(fp,"%d,time,items,%.2f\n",serial_number,pricetotal);
       drop();
+    }
+    else if (strcmp(cmd, "newday") == 0 ) //新的一天
+    {
+      newday();
     }
     else
     {
+      serial_number++;
       success = 0;
       while (cmd != NULL)
       {
