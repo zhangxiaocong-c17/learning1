@@ -59,6 +59,8 @@ int main()
       receipt();
       fprintf(fp,"%d,time,items,%.2f\n",serial_number,pricetotal);
       drop();
+      fclose(fp);
+      fp = fopen("sales.csv","a+");
     }
     else if (strcmp(cmd, "newday") == 0 ) //新的一天
     {
