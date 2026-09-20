@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 char input[100];
 char *cmd; // 没搞懂指针是什么先照葫芦画瓢吧
 int count[3];
@@ -17,6 +18,7 @@ char product_code[3][4] = {"001", "002", "003"};
 int daycount = 1;
 int serial_number = 1;
 FILE *fp = NULL;
+time_t rawtime;
 
 void setprice() //设置商品价格
 {
@@ -56,8 +58,11 @@ int main()
     }
     else if (strcmp(cmd, "checkout") == 0) // 结账
     {
+      time(&rawtime);
+      localtime(&rawtime);
+      struct tm *t = localtime(&rawtime); 
       receipt();
-      fprintf(fp,"%d,time,items,%.2f\n",serial_number,pricetotal);
+      fprintf(fp,"%d,%02d:%02d:%02d,items,%.2f\n",serial_number,t->tm_hour,t->tm_min,t->tm_sec,pricetotal);
       serial_number++;
       drop();
       fclose(fp);
