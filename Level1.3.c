@@ -14,6 +14,8 @@ void output();
 void receipt();
 void drop();
 void newday();
+void getitems();
+char item[100]; 
 char product_code[3][4] = {"001", "002", "003"};
 int daycount = 1;
 int serial_number = 1;
@@ -62,7 +64,8 @@ int main()
       localtime(&rawtime);
       struct tm *t = localtime(&rawtime); 
       receipt();
-      fprintf(fp,"%d,%02d:%02d:%02d,items,%.2f\n",serial_number,t->tm_hour,t->tm_min,t->tm_sec,pricetotal);
+      getitems();
+      fprintf(fp,"%d,%02d:%02d:%02d,%s,%.2f\n",serial_number,t->tm_hour,t->tm_min,t->tm_sec,item,pricetotal);
       serial_number++;
       drop();
       fclose(fp);
@@ -131,7 +134,6 @@ void output() // 扫描时实时计算、输出价格
     mark[i] = 0;
   }
 }
-
 void receipt() // 计算输出总价
 {
   pricetotal = priceproduct[0] + priceproduct[1] + priceproduct[2];
@@ -167,4 +169,19 @@ void newday() //新的一天 保存记录 并初始化sales.csv
   printf("New day started. Today's sales records cleared.\n");
   fp = fopen("sales.csv","w+");
   fprintf(fp,"No.,Time,Items,Ament\n");
+}
+void getitems() //获取物品信息
+{
+  for(int i = 0; i <= 3 && count[i] > 0 ; i++ )
+  {
+    char countchar[10]; // 之后用于将商品数由int转化为char
+    strcpy(name[i],item);
+    strcat("x",item);
+    sprintf(countchar, "%d", count[i]); // 用于将商品数由int转化为char
+    strcat(countchar,item);
+    if(i != 3)
+    {
+      strcat(";",item);
+    }
+  }
 }
