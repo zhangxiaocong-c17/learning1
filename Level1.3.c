@@ -58,6 +58,7 @@ int main()
     {
       receipt();
       fprintf(fp,"%d,time,items,%.2f\n",serial_number,pricetotal);
+      serial_number++;
       drop();
       fclose(fp);
       fp = fopen("sales.csv","a+");
@@ -68,7 +69,6 @@ int main()
     }
     else
     {
-      serial_number++;
       success = 0;
       while (cmd != NULL)
       {
