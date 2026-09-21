@@ -44,7 +44,7 @@ int main()
   setprice();
   while (1)
   {
-    printf(">");
+    printf("> ");
     fgets(input, sizeof(input), stdin);
     cmd = strtok(input, " \t\n");
     if (strcmp(cmd, "exit") == 0 || strcmp(cmd, "quit") == 0) // python后遗症注意不要写成or
@@ -82,8 +82,12 @@ void cashier() // 店员模式
     cmd = strtok(input, " \t\n");
     if (strcmp(cmd, password) == 0)
     {
-      printf("\nAdmin mode.\n");
+      printf("Admin mode.\n");
       mode = 1;
+    }
+    else
+    {
+      printf("Incorrect password.\n");
     }
   }
   else if (strcmp(cmd, "print") == 0) // 打印小票
@@ -159,7 +163,15 @@ void cashier() // 店员模式
 }
 void admin()
 {
-  printf("Never Gonna Give You Up!\n");
+  if (strcmp(cmd,"back") == 0)
+  {
+    printf("Bye.\n");
+    mode = 0;
+  }
+  else
+  {
+  printf("admin");
+  }
 }
 void output() // 扫描时实时计算、输出价格
 {
