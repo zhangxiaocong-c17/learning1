@@ -36,6 +36,7 @@ int main()
 {
   fp = fopen("sales.csv","w+");
   fprintf(fp,"No.,Time,Items,Ament\n");
+  fclose(fp);
   setprice();
   while (1)
   {
@@ -64,6 +65,7 @@ int main()
     }
     else if (strcmp(cmd, "checkout") == 0) // 结账
     {
+      fp = fopen("sales.csv","a+");
       time(&rawtime);
       localtime(&rawtime);
       struct tm *t = localtime(&rawtime); 
@@ -73,7 +75,6 @@ int main()
       serial_number++;
       drop();
       fclose(fp);
-      fp = fopen("sales.csv","a+");
     }
     else if (strcmp(cmd, "newday") == 0 ) //新的一天
     {
@@ -174,9 +175,11 @@ void newday() //新的一天 保存记录 并初始化sales.csv
   sprintf(filename,"sales/Day%d.csv",daycount);
   rename("sales.csv",filename);
   daycount++;
+  serial_number=1;
   printf("New day started. Today's sales records cleared.\n");
   fp = fopen("sales.csv","w+");
   fprintf(fp,"No.,Time,Items,Ament\n");
+  fclose(fp);
 }
 void getitems() //获取物品信息
 {
