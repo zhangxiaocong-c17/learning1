@@ -141,3 +141,4 @@ atof ：ASCII to float
 v2.4.1: 修复了查看sales后首次checkout无法写入的bug
 原因：sales将文件打开模式修改为只读模式 程序逻辑不太对 再次checkout时模式没切过来 理应重新打开
 已修复。
+v2.5.0: 增加了sales查看其它日期的记录的功能
