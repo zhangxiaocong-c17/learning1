@@ -1,26 +1,29 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-char input[100];
-char *cmd; // 没搞懂指针是什么先照葫芦画瓢吧
+char input[100];//用户输入
+char *cmd; // 切分后的用户输入
 int count[3];
 float price[3];
 int mark[3]; // 用于标记一次扫描是否对某件商品改动，以决定是否显示
 int success; // 标记一次指令是否是已知指令
-float pricetotal;
-float priceproduct[3];
+float pricetotal;//总价
+float priceproduct[3];//n个同种商品的总价
 char name[3][9] = {"Cola", "Lollipop", "Noodles"};
 void output();
 void receipt();
 void drop();
 void newday();
 void getitems();
-char item[100]; 
+char item[100]; //形如"cola x1;"的商品详情
 char product_code[3][4] = {"001", "002", "003"};
-int daycount = 1;
-int serial_number = 1;
-FILE *fp = NULL;
-time_t rawtime;
+int daycount = 1;//天数
+int serial_number = 1;//序列号
+char line[100];//读取文件一行的字符串
+FILE *fp = NULL;//文件指针
+time_t rawtime;//时间戳（距1970.1.1的秒数）
+char *cell;//读取的一个格子
+void read(int day);
 
 void setprice() //设置商品价格
 {
@@ -74,6 +77,10 @@ int main()
     else if (strcmp(cmd, "newday") == 0 ) //新的一天
     {
       newday();
+    }
+    else if (strcmp(cmd,"sales") == 0)//查看记录
+    {
+      read(daycount);
     }
     else
     {
@@ -179,13 +186,40 @@ void getitems() //获取物品信息
     if(count[i]>0)
     {
     strcat(item,name[i]);
-    strcat(item,"x");
+    strcat(item," x");
     sprintf(countchar, "%d", count[i]); // 用于将商品数由int转化为char
-    strcat(item,countchar);
-    if(i != 2)
-    {
-      strcat(item,";");
+    strcat(item,countchar);    
+    strcat(item,";");
     }
-    }
+  }
+  if(item[0] == '\0')
+  {
+    strcat(item,"NULL");
+  }
+}
+void read(int day)//从文件中读取物品信息
+{
+  if(day == daycount)//当日
+  {
+    fp = fopen("sales.csv","r");
+  }
+  else//其他日期的
+  {
+    char filename[50];
+    sprintf(filename,"sales/Day%d.csv",day);
+    fp = fopen(filename,"r");
+  }
+  fgets(line,20,fp); // 跳过第一行表头 
+  while (fgets(line,100,fp) != NULL)//逐行读取并输出到屏幕
+  {
+    cell = strtok(line," \n\t,");
+    char cell_number[] = cell;
+    cell = strtok(NULL," \n\t");
+    char cell_time[] = cell;
+    cell = strtok(NULL," \n\t");
+    char cell_items[] = cell;
+    cell = strtok(NULL," \n\t");
+    char cell_ament[] = cell;
+    printf("%6s%8s  %s%s",cell_number,cell_time,cell_items,cell_ament);
   }
 }
