@@ -82,7 +82,16 @@ int main()
     }
     else if (strcmp(cmd,"sales") == 0)//查看记录
     {
-      read(daycount);
+      char *cmd_sales = strtok(NULL," \n\t");
+      if (cmd_sales == NULL)
+      {
+        read(daycount);
+      }
+      else
+      {
+        int cmd_sales_int=atoi(cmd_sales);
+        read(cmd_sales_int);
+      }
     }
     else
     {
