@@ -63,11 +63,11 @@ int main()
     {
       if (mode == 0)
       {
-        void cashier();
+        cashier();
       }
       if (mode == 1)
       {
-        void admin();
+        admin();
       }
     }
   }
@@ -156,6 +156,10 @@ void cashier() // 店员模式
     }
     output();
   }
+}
+void admin()
+{
+  printf("Never Gonna Give You Up!\n");
 }
 void output() // 扫描时实时计算、输出价格
 {
