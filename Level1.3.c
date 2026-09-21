@@ -212,14 +212,13 @@ void read(int day)//从文件中读取物品信息
   fgets(line,20,fp); // 跳过第一行表头 
   while (fgets(line,100,fp) != NULL)//逐行读取并输出到屏幕
   {
-    cell = strtok(line," \n\t,");
-    char cell_number[] = cell;
-    cell = strtok(NULL," \n\t");
-    char cell_time[] = cell;
-    cell = strtok(NULL," \n\t");
-    char cell_items[] = cell;
-    cell = strtok(NULL," \n\t");
-    char cell_ament[] = cell;
-    printf("%6s%8s  %s%s",cell_number,cell_time,cell_items,cell_ament);
+    cell = strtok(line,"\n\t,");
+    printf("%6s",cell);//编号
+    cell = strtok(NULL,"\n\t,");
+    printf("%8s",cell);//时间
+    cell = strtok(NULL,"\n\t,");
+    printf("  %s",cell);//数量
+    cell = strtok(NULL,"\n\t,");
+    printf("%s\n",cell);//总价
   }
 }

@@ -122,4 +122,11 @@ fgets读到换行符或EOF或达到字符数上限后会停止
 也就是说 fgets一次读一行
 跳过表头的方法 就是执行一次fgets不用里面的结果...
 v2.3.0: 增加了基础的读取文件的功能
-但是不可用
+但是不可用 编译器输出如下：
+.\Level1.3.c: In function 'read':
+.\Level1.3.c:216:26: error: invalid initializer
+     char cell_number[] = cell;
+原因：strtok 返回的是指针，它指向的还是原来的那行 line 数据里！
+左边是字符串变量 右边是指针 不匹配 
+解决方法：1.使用 strcpy
+2.直接打印（采用这个） 
