@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
 char input[100];//用户输入
 char *cmd; // 切分后的用户输入
 int count[3];
@@ -209,16 +210,28 @@ void read(int day)//从文件中读取物品信息
     sprintf(filename,"sales/Day%d.csv",day);
     fp = fopen(filename,"r");
   }
+  float daily = 0 ;
   fgets(line,22,fp); // 跳过第一行表头 
+  printf("Date: %d\n",day);
+  printf("--------------------------------------\n");
   while (fgets(line,100,fp) != NULL)//逐行读取并输出到屏幕
-  {
+  { 
     cell = strtok(line,"\n\t,");
     printf("%-6s",cell);//编号
     cell = strtok(NULL,"\n\t,");
     printf("%8s",cell);//时间
     cell = strtok(NULL,"\n\t,");
+    //for(int i = 0; cell[i] != 0; i++ )
+    //{
+    //  if (cell[i] == ';'){cell[i] = '\n';}
+    //}
     printf("  %s",cell);//数量
     cell = strtok(NULL,"\n\t,");
     printf("%s\n",cell);//总价
+
+    float cell_price = atof(cell);
+    daily = daily + cell_price;
   }
+  printf("--------------------------------------\n");
+  printf("Daily: %.2f\n",daily);
 }
