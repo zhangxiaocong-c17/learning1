@@ -173,9 +173,11 @@ void newday() //新的一天 保存记录 并初始化sales.csv
 void getitems() //获取物品信息
 {
   item[0] = '\0';
-  for(int i = 0; i <= 2 && count[i] > 0 ; i++ )
+  char countchar[10]; // 之后用于将商品数由int转化为char
+  for(int i = 0; i <= 2 ; i++ )
   {
-    char countchar[10]; // 之后用于将商品数由int转化为char
+    if(count[i]>0)
+    {
     strcat(item,name[i]);
     strcat(item,"x");
     sprintf(countchar, "%d", count[i]); // 用于将商品数由int转化为char
@@ -183,6 +185,7 @@ void getitems() //获取物品信息
     if(i != 2)
     {
       strcat(item,";");
+    }
     }
   }
 }
