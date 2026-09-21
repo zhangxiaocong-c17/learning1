@@ -209,11 +209,11 @@ void read(int day)//从文件中读取物品信息
     sprintf(filename,"sales/Day%d.csv",day);
     fp = fopen(filename,"r");
   }
-  fgets(line,20,fp); // 跳过第一行表头 
+  fgets(line,22,fp); // 跳过第一行表头 
   while (fgets(line,100,fp) != NULL)//逐行读取并输出到屏幕
   {
     cell = strtok(line,"\n\t,");
-    printf("%6s",cell);//编号
+    printf("%-6s",cell);//编号
     cell = strtok(NULL,"\n\t,");
     printf("%8s",cell);//时间
     cell = strtok(NULL,"\n\t,");
