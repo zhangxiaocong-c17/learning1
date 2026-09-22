@@ -15,6 +15,9 @@ void receipt();
 void drop();
 void newday();
 void getitems();
+void setprice();
+void itemadd();
+void itemdel();
 char item[100]; // 形如"cola x1;"的商品详情
 char product_code[3][4] = {"001", "002", "003"};
 int daycount = 1;      // 天数
@@ -28,14 +31,13 @@ int mode = 0; // 控制是否为管理员模式
 void cashier();
 void admin();
 char password[] = {"admin123"}; // 设置密码
-struct products
+struct products                 // 声明结构类型
 {
   char code[4];
   float price;
   char name[20];
-};//声明结构类型
-struct products product[100];//定义100个结构变量product[i]
-
+}; // 声明结构类型
+struct products product[100]; // 定义100个结构变量product[i]
 
 void setinfo() // 设置商品价格、名称等信息
 {
@@ -44,13 +46,13 @@ void setinfo() // 设置商品价格、名称等信息
   product[1].price = 0.5;
   product[2].price = 6.5;
   /*编码*/
-  strcpy(product[0].code,"001");
-  strcpy(product[1].code,"002");
-  strcpy(product[2].code,"003");
+  strcpy(product[0].code, "001");
+  strcpy(product[1].code, "002");
+  strcpy(product[2].code, "003");
   /*名称*/
-  strcpy(product[0].name,"Cola");
-  strcpy(product[1].name,"Lollipop");
-  strcpy(product[2].name,"Noodles");
+  strcpy(product[0].name, "Cola");
+  strcpy(product[1].name, "Lollipop");
+  strcpy(product[2].name, "Noodles");
 }
 
 int main()
@@ -58,7 +60,7 @@ int main()
   fp = fopen("sales.csv", "w+");
   fprintf(fp, "No.,Time,Items,Ament\n");
   fclose(fp);
-  setprice();
+  setinfo();
   while (1)
   {
     printf("> ");
@@ -92,12 +94,12 @@ int main()
 }
 void cashier() // 店员模式
 {
-  if (strcmp(cmd, "admin") == 0)//进入管理员模式
+  if (strcmp(cmd, "admin") == 0) // 进入管理员模式
   {
     printf("Password:");
     fgets(input, sizeof(input), stdin);
     cmd = strtok(input, " \t\n");
-    if (strcmp(cmd, password) == 0)//校验密码
+    if (strcmp(cmd, password) == 0) // 校验密码
     {
       printf("Admin mode.\n");
       mode = 1;
@@ -180,14 +182,26 @@ void cashier() // 店员模式
 }
 void admin() // 管理员模式
 {
-  if (strcmp(cmd,"back") == 0)
+  if (strcmp(cmd, "back") == 0)
   {
     printf("Bye.\n");
     mode = 0;
   }
   else
   {
-  printf("admin");
+    if (strcmp(cmd, "setprice") == 0)
+    {
+      setprice();
+    }
+    else if (strcmp(cmd, "itemadd") == 0)
+    {
+      itemadd();
+    }
+    else if (strcmp(cmd, "itemdel") == 0)
+    {
+      itemdel();
+    }
+    printf("admin");
   }
 }
 void output() // 扫描时实时计算、输出价格
@@ -308,4 +322,25 @@ void read(int day) // 从文件中读取物品信息
   }
   printf("--------------------------------------\n");
   printf("Daily: %.2f\n", daily);
+}
+void setprice() // 修改商品价格
+{
+  cmd = strtok(NULL, " \n\t");
+  printf("code:%s", cmd); // 功能未实现 当作占位符
+  cmd = strtok(NULL, " \n\t");
+  printf("newprice:%s", cmd); // 功能未实现 当作占位符
+}
+void itemadd() // 添加新商品
+{
+  cmd = strtok(NULL, " \n\t");
+  printf("code:%s", cmd); // 功能未实现 当作占位符
+  cmd = strtok(NULL, " \n\t");
+  printf("name:%s", cmd); // 功能未实现 当作占位符
+  cmd = strtok(NULL, " \n\t");
+  printf("price:%s", cmd); // 功能未实现 当作占位符
+}
+void itemdel() // 删除商品
+{
+  cmd = strtok(NULL, " \n\t");
+  printf("code:%s", cmd); // 功能未实现 当作占位符
 }
