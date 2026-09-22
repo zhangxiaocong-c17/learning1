@@ -39,6 +39,7 @@ struct products                 // 声明结构类型
 }; // 声明结构类型
 struct products product[100]; // 定义100个结构变量product[i]
 int product_count = 0;
+void savechanges();
 
 void setinfo() // 设置商品价格、名称等信息
 {
@@ -348,8 +349,20 @@ void setprice() // 修改商品价格
 {
   cmd = strtok(NULL, " \n\t");
   printf("code:%s", cmd); // 功能未实现 当作占位符
+  char cmd_code[10];
+  strcpy(cmd_code,cmd);
   cmd = strtok(NULL, " \n\t");
+  float cmd_price = atof(cmd);
+  for(int i=0; i <= product_count - 1; i++)
+  {
+    if(strcmp(cmd_code,product[i].code)==0)
+    {
+      product[i].price = cmd_price;
+      break;
+    }
+  }
   printf("newprice:%s", cmd); // 功能未实现 当作占位符
+  savechanges();
 }
 void itemadd() // 添加新商品
 {
@@ -364,4 +377,14 @@ void itemdel() // 删除商品
 {
   cmd = strtok(NULL, " \n\t");
   printf("code:%s", cmd); // 功能未实现 当作占位符
+}
+void savechanges() // 保存对商品信息的改动
+{
+  fp = fopen("info.csv","w");
+  fprintf(fp,"Item,No.,Pri.\n");
+  for(int i = 0; i <= product_count - 1; i++)
+  {
+    fprintf(fp,"%s,%s,%d\n",product[i].name,product[i].code,product[i].price);
+  }
+  fclose(fp);
 }
