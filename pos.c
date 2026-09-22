@@ -386,7 +386,7 @@ void itemdel() // 删除商品
   product_count--;
   for (int i = 0; i <= product_count - 1; i++)
   {
-    if (strcmp(cmd, product[i].name) == 0)
+    if (strcmp(cmd, product[i].code) == 0)
     {
       for (int ii = i; ii <= product_count - 1; ii++)
       {
