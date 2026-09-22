@@ -55,21 +55,36 @@ void setinfo() // 设置商品价格、名称等信息
   strcpy(product[2].name, "Noodles");
 }
 
+void getinfo()//从info.csv文件中读取商品价格、名称等信息
+{
+  fp = fopen("info.csv","r");
+  fgets(line, 25 ,fp);
+  for (int i = 0;fgets(line, 100, fp) != NULL;i++) // 逐行读取并保存到结构体product[i]中
+  {
+    cell = strtok(line, "\n\t,");//名称
+    strcpy(product[i].name,cell);
+    cell = strtok(NULL, "\n\t,");//编码
+    strcpy(product[i].code,cell);
+    cell = strtok(NULL, "\n\t,");//价格
+    product[i].price=atof(cell);
+  }
+}
+
 int main()
 {
   fp = fopen("sales.csv", "w+");
   fprintf(fp, "No.,Time,Items,Ament\n");
   fclose(fp);
-  setinfo();
+  getinfo();
   while (1)
   {
     printf("> ");
     fgets(input, sizeof(input), stdin);
     cmd = strtok(input, " \t\n");
-    if (strcmp(cmd, "exit") == 0 || strcmp(cmd, "quit") == 0) // python后遗症注意不要写成or
+    if (strcmp(cmd, "exit") == 0 || strcmp(cmd, "quit") == 0) // 退出程序
     {
       break;
-    } // 退出程序
+    }
     else if (strcmp(cmd, "prices") == 0) // 查询价格
     {
       printf("Item     No. Pri.\n"
@@ -78,13 +93,13 @@ int main()
              "Lollipop 002 0.50\n"
              "Noodles  003 6.00\n");
     }
-    else
+    else//判断模式
     {
-      if (mode == 0)
+      if (mode == 0)//收银员
       {
         cashier();
       }
-      if (mode == 1)
+      if (mode == 1)//管理员
       {
         admin();
       }
