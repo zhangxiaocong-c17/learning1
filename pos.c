@@ -384,7 +384,7 @@ void savechanges() // 保存对商品信息的改动
   fprintf(fp,"Item,No.,Pri.\n");
   for(int i = 0; i <= product_count - 1; i++)
   {
-    fprintf(fp,"%s,%s,%d\n",product[i].name,product[i].code,product[i].price);
+    fprintf(fp,"%s,%s,%.2f\n",product[i].name,product[i].code,product[i].price);
   }
   fclose(fp);
 }
