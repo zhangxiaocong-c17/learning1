@@ -38,7 +38,7 @@ struct products                 // 声明结构类型
   char name[20];
 }; // 声明结构类型
 struct products product[100]; // 定义100个结构变量product[i]
-int product_count = 0;
+int product_count = 0;//商品种类数
 void savechanges();
 
 void setinfo() // 设置商品价格、名称等信息
@@ -348,7 +348,7 @@ void read(int day) // 从文件中读取物品信息
 void setprice() // 修改商品价格
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s", cmd); // 功能未实现 当作占位符
+  printf("code:%s\n", cmd); 
   char cmd_code[10];
   strcpy(cmd_code,cmd);
   cmd = strtok(NULL, " \n\t");
@@ -361,22 +361,30 @@ void setprice() // 修改商品价格
       break;
     }
   }
-  printf("newprice:%s", cmd); // 功能未实现 当作占位符
+  printf("newprice:%s\n", cmd); 
   savechanges();
 }
 void itemadd() // 添加新商品
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s", cmd); // 功能未实现 当作占位符
+  printf("code:%s\n", cmd); 
+  strcpy(product[product_count].code,cmd); 
   cmd = strtok(NULL, " \n\t");
-  printf("name:%s", cmd); // 功能未实现 当作占位符
+  printf("name:%s\n", cmd); 
+  strcpy(product[product_count].name,cmd);
   cmd = strtok(NULL, " \n\t");
-  printf("price:%s", cmd); // 功能未实现 当作占位符
+  printf("price:%s\n", cmd); 
+  float cmd_price = atof(cmd);
+  product[product_count].price  = cmd_price;
+  product_count++;
+  savechanges();
 }
 void itemdel() // 删除商品
 {
   cmd = strtok(NULL, " \n\t");
   printf("code:%s", cmd); // 功能未实现 当作占位符
+  char cmd_code[10];
+  strcpy(cmd_code,cmd);
 }
 void savechanges() // 保存对商品信息的改动
 {
