@@ -146,3 +146,22 @@ v2.5.0: 增加了sales查看其它日期的记录的功能
 9.21晚间
 v3.0.0: 加入了管理员模式 但是除了exit prices什么都用不了了
 原因是注意到自己调用函数的时候写的是void cashier();  而这个真实含义是定义cashier 用函数直接cashier(); 即可
+
+9.22
+初识结构体 
+同一对象（如商品） 不同属性（价格 名称 ...） 数据类型不同 组合成 结构体
+基本用法：
+struct products
+{
+  char name[20];
+  float price;
+  ...
+};//声明结构类型
+struct products product[100];//定义100个结构变量product[i]
+具体数据：变量product[1].price; 地址product[1].name;
+注意 product[1].name 代表地址 为常量 对应一个数组product[1].name[20] 不可直接赋值 用strcpy
+也就是说 结构体并不改变变量的属性
+例： （定义char text[10] 和 float aaa）
+text-->products.name    -->strcpy
+aaa--> products.price   -->aaa = 1赋值
+

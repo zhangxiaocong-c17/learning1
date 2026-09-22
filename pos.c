@@ -161,7 +161,7 @@ void cashier() // 店员模式
     output();
   }
 }
-void admin()
+void admin() // 管理员模式
 {
   if (strcmp(cmd,"back") == 0)
   {
