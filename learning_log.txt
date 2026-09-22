@@ -165,3 +165,5 @@ struct products product[100];//定义100个结构变量product[i]
 text-->products.name    -->strcpy
 aaa--> products.price   -->aaa = 1赋值
 
+v3.0.2: 用结构体形式重新存储了价格信息
+v3.0.3: 用结构体形式重新存储了编码和名称

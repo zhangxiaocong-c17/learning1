@@ -5,7 +5,6 @@
 char input[100]; // 用户输入
 char *cmd;       // 切分后的用户输入
 int count[3];
-float price[3];
 int mark[3];           // 用于标记一次扫描是否对某件商品改动，以决定是否显示
 int success;           // 标记一次指令是否是已知指令
 float pricetotal;      // 总价
@@ -29,13 +28,31 @@ int mode = 0; // 控制是否为管理员模式
 void cashier();
 void admin();
 char password[] = {"admin123"}; // 设置密码
-
-void setprice() // 设置商品价格
+struct products
 {
-  price[0] = 3.5;
-  price[1] = 0.5;
-  price[2] = 6.5;
+  char code[4];
+  float price;
+  char name[20];
+};//声明结构类型
+struct products product[100];//定义100个结构变量product[i]
+
+
+void setinfo() // 设置商品价格、名称等信息
+{
+  /*价格*/
+  product[0].price = 3.5;
+  product[1].price = 0.5;
+  product[2].price = 6.5;
+  /*编码*/
+  strcpy(product[0].code,"001");
+  strcpy(product[1].code,"002");
+  strcpy(product[2].code,"003");
+  /*名称*/
+  strcpy(product[0].name,"Cola");
+  strcpy(product[1].name,"Lollipop");
+  strcpy(product[2].name,"Noodles");
 }
+
 int main()
 {
   fp = fopen("sales.csv", "w+");
@@ -75,12 +92,12 @@ int main()
 }
 void cashier() // 店员模式
 {
-  if (strcmp(cmd, "admin") == 0)
+  if (strcmp(cmd, "admin") == 0)//进入管理员模式
   {
     printf("Password:");
     fgets(input, sizeof(input), stdin);
     cmd = strtok(input, " \t\n");
-    if (strcmp(cmd, password) == 0)
+    if (strcmp(cmd, password) == 0)//校验密码
     {
       printf("Admin mode.\n");
       mode = 1;
@@ -135,7 +152,7 @@ void cashier() // 店员模式
     {
       for (int i = 0; i <= 2; i++)
       {
-        if (strcmp(cmd, product_code[i]) == 0) // 增加商品
+        if (strcmp(cmd, product[i].code) == 0) // 增加商品
         {
           count[i]++;
           mark[i] = 1;
@@ -143,7 +160,7 @@ void cashier() // 店员模式
         }
         if (cmd[0] == '-') // 减少商品
         {
-          if (strcmp(cmd + 1, product_code[i]) == 0)
+          if (strcmp(cmd + 1, product[i].code) == 0)
           {
             count[i]--;
             mark[i] = 1;
@@ -179,7 +196,7 @@ void output() // 扫描时实时计算、输出价格
   {
     if (count[i] > 0)
     {
-      priceproduct[i] = price[i] * count[i];
+      priceproduct[i] = product[i].price * count[i];
     }
     else if (count[i] == 0)
     {
@@ -192,7 +209,7 @@ void output() // 扫描时实时计算、输出价格
     }
     if (mark[i] == 1)
     {
-      printf("%-9s%5.2f x%-2d=%.2f\n", name[i], price[i], count[i], priceproduct[i]);
+      printf("%-9s%5.2f x%-2d=%.2f\n", product[i].name, product[i].price, count[i], priceproduct[i]);
     }
     mark[i] = 0;
   }
@@ -207,7 +224,7 @@ void receipt() // 计算输出总价
   {
     if (count[i] > 0)
     {
-      printf("%-9s%5.2f x%-2d=%.2f\n", name[i], price[i], count[i], priceproduct[i]);
+      printf("%-9s%5.2f x%-2d=%.2f\n", product[i].name, product[i].price, count[i], priceproduct[i]);
     }
   }
   printf("-------------------------\n");
@@ -243,7 +260,7 @@ void getitems() // 获取物品信息
   {
     if (count[i] > 0)
     {
-      strcat(item, name[i]);
+      strcat(item, product[i].name);
       strcat(item, " x");
       sprintf(countchar, "%d", count[i]); // 用于将商品数由int转化为char
       strcat(item, countchar);
