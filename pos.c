@@ -38,7 +38,7 @@ struct products                 // 声明结构类型
   char name[20];
 }; // 声明结构类型
 struct products product[100]; // 定义100个结构变量product[i]
-int product_count = 0;//商品种类数
+int product_count = 0;        // 商品种类数
 void savechanges();
 
 void setinfo() // 设置商品价格、名称等信息
@@ -348,51 +348,64 @@ void read(int day) // 从文件中读取物品信息
 void setprice() // 修改商品价格
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s\n", cmd); 
+  printf("code:%s\n", cmd);
   char cmd_code[10];
-  strcpy(cmd_code,cmd);
+  strcpy(cmd_code, cmd);
   cmd = strtok(NULL, " \n\t");
   float cmd_price = atof(cmd);
-  for(int i=0; i <= product_count - 1; i++)
+  for (int i = 0; i <= product_count - 1; i++)
   {
-    if(strcmp(cmd_code,product[i].code)==0)
+    if (strcmp(cmd_code, product[i].code) == 0)
     {
       product[i].price = cmd_price;
       break;
     }
   }
-  printf("newprice:%s\n", cmd); 
+  printf("newprice:%s\n", cmd);
   savechanges();
 }
 void itemadd() // 添加新商品
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s\n", cmd); 
-  strcpy(product[product_count].code,cmd); 
+  printf("code:%s\n", cmd);
+  strcpy(product[product_count].code, cmd);
   cmd = strtok(NULL, " \n\t");
-  printf("name:%s\n", cmd); 
-  strcpy(product[product_count].name,cmd);
+  printf("name:%s\n", cmd);
+  strcpy(product[product_count].name, cmd);
   cmd = strtok(NULL, " \n\t");
-  printf("price:%s\n", cmd); 
+  printf("price:%s\n", cmd);
   float cmd_price = atof(cmd);
-  product[product_count].price  = cmd_price;
+  product[product_count].price = cmd_price;
   product_count++;
   savechanges();
 }
 void itemdel() // 删除商品
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s", cmd); // 功能未实现 当作占位符
-  char cmd_code[10];
-  strcpy(cmd_code,cmd);
+  printf("code:%s", cmd); 
+  product_count--;
+  for (int i = 0; i <= product_count - 1; i++)
+  {
+    if (strcmp(cmd, product[i].name) == 0)
+    {
+      for (int ii = i; ii <= product_count - 1; ii++)
+      {
+        strcpy(product[ii].name,product[ii+1].name);
+        strcpy(product[ii].code,product[ii+1].code);
+        product[ii].price = product[ii+1].price;
+      }
+      break;
+    }
+  }
+  savechanges();
 }
 void savechanges() // 保存对商品信息的改动
 {
-  fp = fopen("info.csv","w");
-  fprintf(fp,"Item,No.,Pri.\n");
-  for(int i = 0; i <= product_count - 1; i++)
+  fp = fopen("info.csv", "w");
+  fprintf(fp, "Item,No.,Pri.\n");
+  for (int i = 0; i <= product_count - 1; i++)
   {
-    fprintf(fp,"%s,%s,%.2f\n",product[i].name,product[i].code,product[i].price);
+    fprintf(fp, "%s,%s,%.2f\n", product[i].name, product[i].code, product[i].price);
   }
   fclose(fp);
 }
