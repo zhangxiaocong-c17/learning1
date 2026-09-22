@@ -4,11 +4,11 @@
 #include <stdlib.h>
 char input[100]; // 用户输入
 char *cmd;       // 切分后的用户输入
-int count[3];
-int mark[3];           // 用于标记一次扫描是否对某件商品改动，以决定是否显示
-int success;           // 标记一次指令是否是已知指令
-float pricetotal;      // 总价
-float priceproduct[3]; // n个同种商品的总价
+int count[100];
+int mark[100];           // 用于标记一次扫描是否对某件商品改动，以决定是否显示
+int success;             // 标记一次指令是否是已知指令
+float pricetotal;        // 总价
+float priceproduct[100]; // n个同种商品的总价
 char name[3][9] = {"Cola", "Lollipop", "Noodles"};
 void output();
 void receipt();
@@ -38,6 +38,7 @@ struct products                 // 声明结构类型
   char name[20];
 }; // 声明结构类型
 struct products product[100]; // 定义100个结构变量product[i]
+int product_count = 0;
 
 void setinfo() // 设置商品价格、名称等信息
 {
@@ -55,18 +56,19 @@ void setinfo() // 设置商品价格、名称等信息
   strcpy(product[2].name, "Noodles");
 }
 
-void getinfo()//从info.csv文件中读取商品价格、名称等信息
+void getinfo() // 从info.csv文件中读取商品价格、名称等信息
 {
-  fp = fopen("info.csv","r");
-  fgets(line, 25 ,fp);
-  for (int i = 0;fgets(line, 100, fp) != NULL;i++) // 逐行读取并保存到结构体product[i]中
+  fp = fopen("info.csv", "r");
+  fgets(line, 25, fp);
+  for (int i = 0; fgets(line, 100, fp) != NULL; i++) // 逐行读取并保存到结构体product[i]中
   {
-    cell = strtok(line, "\n\t,");//名称
-    strcpy(product[i].name,cell);
-    cell = strtok(NULL, "\n\t,");//编码
-    strcpy(product[i].code,cell);
-    cell = strtok(NULL, "\n\t,");//价格
-    product[i].price=atof(cell);
+    cell = strtok(line, "\n\t,"); // 名称
+    strcpy(product[i].name, cell);
+    cell = strtok(NULL, "\n\t,"); // 编码
+    strcpy(product[i].code, cell);
+    cell = strtok(NULL, "\n\t,"); // 价格
+    product[i].price = atof(cell);
+    product_count++;
   }
 }
 
@@ -93,13 +95,13 @@ int main()
              "Lollipop 002 0.50\n"
              "Noodles  003 6.00\n");
     }
-    else//判断模式
+    else // 判断模式
     {
-      if (mode == 0)//收银员
+      if (mode == 0) // 收银员
       {
         cashier();
       }
-      if (mode == 1)//管理员
+      if (mode == 1) // 管理员
       {
         admin();
       }
@@ -167,7 +169,7 @@ void cashier() // 店员模式
     success = 0;
     while (cmd != NULL)
     {
-      for (int i = 0; i <= 2; i++)
+      for (int i = 0; i <= product_count - 1; i++)
       {
         if (strcmp(cmd, product[i].code) == 0) // 增加商品
         {
@@ -221,7 +223,7 @@ void admin() // 管理员模式
 }
 void output() // 扫描时实时计算、输出价格
 {
-  for (int i = 0; i <= 2; i++)
+  for (int i = 0; i <= product_count - 1; i++)
   {
     if (count[i] > 0)
     {
@@ -245,11 +247,15 @@ void output() // 扫描时实时计算、输出价格
 }
 void receipt() // 计算输出总价
 {
-  pricetotal = priceproduct[0] + priceproduct[1] + priceproduct[2];
+  pricetotal = 0;
+  for (int i = 0; i <= product_count - 1; i++)
+  {
+    pricetotal = pricetotal + priceproduct[i];
+  }
   printf("Receipt\n"
          "Item      Pri.  Qty Amount\n"
          "-------------------------\n");
-  for (int i = 0; i <= 2; i++)
+  for (int i = 0; i <= product_count - 1; i++)
   {
     if (count[i] > 0)
     {
@@ -261,7 +267,7 @@ void receipt() // 计算输出总价
 }
 void drop() // 清空记录
 {
-  for (int i = 0; i <= 2; i++)
+  for (int i = 0; i <= product_count - 1; i++)
   {
     count[i] = 0;
     priceproduct[i] = 0;
@@ -285,7 +291,7 @@ void getitems() // 获取物品信息
 {
   item[0] = '\0';
   char countchar[10]; // 之后用于将商品数由int转化为char
-  for (int i = 0; i <= 2; i++)
+  for (int i = 0; i <= product_count - 1; i++)
   {
     if (count[i] > 0)
     {
