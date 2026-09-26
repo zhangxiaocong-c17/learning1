@@ -427,6 +427,7 @@ void itemadd() // 添加新商品
   cmd = strtok(NULL, " \n\t");
   float cmd_price = atof(cmd);
   product[product_count].price = cmd_price;
+  product[product_count].stock = 0;
   printf("%s(%s) added.\nPrice:%.2f\n", product[product_count].name, product[product_count].code, product[product_count].price);
   product_count++;
   savechanges();
