@@ -89,7 +89,15 @@ int main()
     printf("> ");
     fgets(input, sizeof(input), stdin);
     cmd = strtok(input, " \t\n");
-    if (strcmp(cmd, "exit") == 0 || strcmp(cmd, "quit") == 0) // 退出程序
+    if (cmd == NULL)
+    {
+      if(mode == 1)
+      {
+        printf("admin");
+      }
+      continue;
+    }
+    else if (strcmp(cmd, "exit") == 0 || strcmp(cmd, "quit") == 0) // 退出程序
     {
       break;
     }
