@@ -36,10 +36,13 @@ struct products                 // 声明结构类型
   char code[4];
   float price;
   char name[20];
+  int stock;
 }; // 声明结构类型
 struct products product[100]; // 定义100个结构变量product[i]
 int product_count = 0;        // 商品种类数
 void savechanges();
+void setstock();
+void restock();
 
 void setinfo() // 设置商品价格、名称等信息
 {
@@ -219,7 +222,18 @@ void admin() // 管理员模式
     {
       itemdel();
     }
+    else if (strcmp(cmd,"restock") == 0){
+      restock();
+    }
+    else if (strcmp(cmd,"setstock") == 0)
+    {
+      setstock();
+    }
     printf("admin");
+    for (int i=0;i<=product_count-1;i++)//显示库存 
+    {
+      printf("name:%s\nstock:%d",product[i].name,product[i].stock);
+    }
   }
 }
 void output() // 扫描时实时计算、输出价格
@@ -402,10 +416,46 @@ void itemdel() // 删除商品
 void savechanges() // 保存对商品信息的改动
 {
   fp = fopen("info.csv", "w");
-  fprintf(fp, "Item,No.,Pri.\n");
+  fprintf(fp, "Item,No.,Pri.,Stock\n");
   for (int i = 0; i <= product_count - 1; i++)
   {
-    fprintf(fp, "%s,%s,%.2f\n", product[i].name, product[i].code, product[i].price);
+    fprintf(fp, "%s,%s,%.2f,%d\n", product[i].name, product[i].code, product[i].price,product[i].stock);
   }
   fclose(fp);
+}
+void setstock()//设置库存
+{
+  cmd = strtok(NULL, " \n\t");
+  printf("code:%s\n", cmd);
+  char cmd_code[10];
+  strcpy(cmd_code, cmd);
+  cmd = strtok(NULL," \n\t");
+  int cmd_stock = atoi(cmd);
+  for (int i = 0; i <= product_count - 1; i++)
+  {
+    if (strcmp(cmd_code, product[i].code) == 0)
+    {
+      product[i].stock = cmd_stock;
+      break;
+    }
+  }
+  savechanges();
+}
+void restock()//增加库存
+{
+  cmd = strtok(NULL, " \n\t");
+  printf("code:%s\n", cmd);
+  char cmd_code[10];
+  strcpy(cmd_code, cmd);
+  cmd = strtok(NULL," \n\t");
+  int cmd_stock = atoi(cmd);
+  for (int i = 0; i <= product_count - 1; i++)
+  {
+    if (strcmp(cmd_code, product[i].code) == 0)
+    {
+      product[i].stock = product[i].stock + cmd_stock;
+      break;
+    }
+  }
+  savechanges();
 }
