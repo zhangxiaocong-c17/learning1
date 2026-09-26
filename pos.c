@@ -9,7 +9,6 @@ int mark[100];           // 用于标记一次扫描是否对某件商品改动�
 int success;             // 标记一次指令是否是已知指令
 float pricetotal;        // 总价
 float priceproduct[100]; // n个同种商品的总价
-char name[3][9] = {"Cola", "Lollipop", "Noodles"};
 void output();
 void receipt();
 void drop();
@@ -18,8 +17,7 @@ void getitems();
 void setprice();
 void itemadd();
 void itemdel();
-char item[100]; // 形如"cola x1;"的商品详情
-char product_code[3][4] = {"001", "002", "003"};
+char item[100];        // 形如"cola x1;"的商品详情
 int daycount = 1;      // 天数
 int serial_number = 1; // 序列号
 char line[100];        // 读取文件一行的字符串
@@ -30,8 +28,8 @@ void read(int day);
 int mode = 0; // 控制是否为管理员模式
 void cashier();
 void admin();
-char password[50] = {"admin123"}; // 设置密码
-struct products                 // 声明结构类型
+char password[50]; // 设置密码
+struct products    // 声明结构类型
 {
   char code[4];
   float price;
@@ -45,23 +43,7 @@ void setstock();              // 更改商品库存
 void restock();               // 增加商品库存
 void setpwd();                // 修改密码
 unsigned long hash_password;
-unsigned long djb2_hash(const char *str);//将字符串转化为哈希值
-
-void setinfo() // 设置商品价格、名称等信息
-{
-  /*价格*/
-  product[0].price = 3.5;
-  product[1].price = 0.5;
-  product[2].price = 6.5;
-  /*编码*/
-  strcpy(product[0].code, "001");
-  strcpy(product[1].code, "002");
-  strcpy(product[2].code, "003");
-  /*名称*/
-  strcpy(product[0].name, "Cola");
-  strcpy(product[1].name, "Lollipop");
-  strcpy(product[2].name, "Noodles");
-}
+unsigned long djb2_hash(const char *str); // 将字符串转化为哈希值
 
 void getinfo() // 从info.csv文件中读取商品价格、名称等信息
 {
@@ -87,7 +69,7 @@ int main()
   fprintf(fp, "No.,Time,Items,Ament\n");
   fclose(fp);
   fp = fopen("password_hash.txt", "r");
-  fscanf(fp,"%lu",&hash_password);
+  fscanf(fp, "%lu", &hash_password);
   getinfo();
   while (1)
   {
@@ -193,7 +175,6 @@ void cashier() // 店员模式
   }
   else
   {
-    success = 0;
     while (cmd != NULL)
     {
       for (int i = 0; i <= product_count - 1; i++)
@@ -529,22 +510,22 @@ void restock() // 增加库存
   }
   savechanges();
 }
-void setpwd()//设置密码
+void setpwd() // 设置密码
 {
   printf("Enter new password:");
   fgets(input, sizeof(input), stdin);
   cmd = strtok(input, "\t\n");
   char cmd_pwd[50];
-  strcpy(cmd_pwd,cmd);
+  strcpy(cmd_pwd, cmd);
   printf("Confirm the password:");
   fgets(input, sizeof(input), stdin);
-  cmd = strtok(input, "\t\n");  
-  if (strcmp(cmd,cmd_pwd)==0)
+  cmd = strtok(input, "\t\n");
+  if (strcmp(cmd, cmd_pwd) == 0)
   {
     printf("Password updated.\n");
-    strcpy(password,cmd_pwd);
+    strcpy(password, cmd_pwd);
     fp = fopen("password_hash.txt", "w");
-    fprintf(fp,"%lu",djb2_hash(password));
+    fprintf(fp, "%lu", djb2_hash(password));
     fclose(fp);
     hash_password = djb2_hash(password);
   }
@@ -553,11 +534,13 @@ void setpwd()//设置密码
     printf("Passwords do not match.\n");
   }
 }
-unsigned long djb2_hash(const char *str) {
-    unsigned long hash = 5381; 
-    int c;
-    while ((c = *str++)) {
-        hash = ((hash << 5) + hash) + c; 
-    }
-    return hash;
+unsigned long djb2_hash(const char *str)//将字符串转化为哈希值
+{
+  unsigned long hash = 5381;
+  int c;
+  while ((c = *str++))
+  {
+    hash = ((hash << 5) + hash) + c;
+  }
+  return hash;
 }
