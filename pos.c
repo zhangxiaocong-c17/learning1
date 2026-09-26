@@ -30,7 +30,7 @@ void read(int day);
 int mode = 0; // 控制是否为管理员模式
 void cashier();
 void admin();
-char password[] = {"admin123"}; // 设置密码
+char password[50] = {"admin123"}; // 设置密码
 struct products                 // 声明结构类型
 {
   char code[4];
@@ -40,9 +40,10 @@ struct products                 // 声明结构类型
 }; // 声明结构类型
 struct products product[100]; // 定义100个结构变量product[i]
 int product_count = 0;        // 商品种类数
-void savechanges();
-void setstock();
-void restock();
+void savechanges();           // 保存文件修改
+void setstock();              // 更改商品库存
+void restock();               // 增加商品库存
+void setpwd();                // 修改密码
 
 void setinfo() // 设置商品价格、名称等信息
 {
@@ -135,7 +136,7 @@ void cashier() // 店员模式
   {
     printf("Password:");
     fgets(input, sizeof(input), stdin);
-    cmd = strtok(input, " \t\n");
+    cmd = strtok(input, "\t\n");
     if (strcmp(cmd, password) == 0) // 校验密码
     {
       printf("Admin mode.\n");
@@ -251,6 +252,11 @@ void admin() // 管理员模式
     else if (strcmp(cmd, "setstock") == 0)
     {
       setstock();
+      success = 1;
+    }
+    else if (strcmp(cmd, "setpwd") == 0)
+    {
+      setpwd();
       success = 1;
     }
     if (success == 0) // 命令不存在报错
@@ -518,4 +524,24 @@ void restock() // 增加库存
     }
   }
   savechanges();
+}
+void setpwd()
+{
+  printf("Enter new password:");
+  fgets(input, sizeof(input), stdin);
+  cmd = strtok(input, "\t\n");
+  char cmd_pwd[50];
+  strcpy(cmd_pwd,cmd);
+  printf("Confirm the password:");
+  fgets(input, sizeof(input), stdin);
+  cmd = strtok(input, "\t\n");  
+  if (strcmp(cmd,cmd_pwd)==0)
+  {
+    printf("Password updated.\n");
+    strcpy(password,cmd_pwd);
+  }
+  else
+  {
+    printf("Passwords do not match.\n");
+  }
 }
