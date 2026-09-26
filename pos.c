@@ -69,7 +69,18 @@ int main()
   fprintf(fp, "No.,Time,Items,Ament\n");
   fclose(fp);
   fp = fopen("password_hash.txt", "r");
-  fscanf(fp, "%lu", &hash_password);
+  if (fp == NULL)
+  {
+    hash_password = djb2_hash("admin123"); // 文件不存在，初始化默认密码 admin123
+    fp = fopen("password_hash.txt", "w");
+    fprintf(fp, "%lu", hash_password);
+    fclose(fp);
+  }
+  else
+  {
+    fscanf(fp, "%lu", &hash_password);
+    fclose(fp);
+  }
   getinfo();
   while (1)
   {
@@ -144,13 +155,12 @@ void cashier() // 店员模式
   }
   else if (strcmp(cmd, "checkout") == 0) // 结账
   {
-    fp = fopen("sales.csv", "a+");
     time(&rawtime);
-    localtime(&rawtime);
     struct tm *t = localtime(&rawtime);
     receipt();
     savechanges();
     getitems();
+    fp = fopen("sales.csv", "a+");
     fprintf(fp, "%d,%02d:%02d:%02d,%s,%.2f\n", serial_number, t->tm_hour, t->tm_min, t->tm_sec, item, pricetotal);
     serial_number++;
     drop();
@@ -392,9 +402,19 @@ void read(int day) // 从文件中读取物品信息
 void setprice() // 修改商品价格
 {
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   char cmd_code[10];
   strcpy(cmd_code, cmd);
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   float cmd_price = atof(cmd);
   for (int i = 0; i <= product_count - 1; i++)
   {
@@ -421,10 +441,25 @@ void itemadd() // 添加新商品
   /*之所以这里使用product.count，是因为数量恰好比最大编号多1
   在数量还没增加的时候，原有数量就是新的最大编号*/
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   strcpy(product[product_count].code, cmd);
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   strcpy(product[product_count].name, cmd);
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   float cmd_price = atof(cmd);
   product[product_count].price = cmd_price;
   product[product_count].stock = 0;
@@ -435,6 +470,12 @@ void itemadd() // 添加新商品
 void itemdel() // 删除商品
 {
   int found = -1;
+  cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   for (int i = 0; i < product_count; i++)
   {
     if (strcmp(product[i].code, cmd) == 0)
@@ -469,10 +510,20 @@ void savechanges() // 保存对商品信息的改动
 void setstock() // 设置库存
 {
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   printf("Stock updated.\ncode:%s\n", cmd);
   char cmd_code[10];
   strcpy(cmd_code, cmd);
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   int cmd_stock = atoi(cmd);
   printf("stock:%d\n", cmd_stock);
   for (int i = 0; i <= product_count - 1; i++)
@@ -488,10 +539,20 @@ void setstock() // 设置库存
 void restock() // 增加库存
 {
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   printf("Stock updated.\ncode:%s\n", cmd);
   char cmd_code[10];
   strcpy(cmd_code, cmd);
   cmd = strtok(NULL, " \n\t");
+  if (cmd == NULL)
+  {
+    printf("ERROR: missing parameter\n");
+    return;
+  }
   int cmd_stock = atoi(cmd);
   for (int i = 0; i <= product_count - 1; i++)
   {
