@@ -72,6 +72,8 @@ void getinfo() // 从info.csv文件中读取商品价格、名称等信息
     strcpy(product[i].code, cell);
     cell = strtok(NULL, "\n\t,"); // 价格
     product[i].price = atof(cell);
+    cell = strtok(NULL,"\n\t,");//库存
+    product[i].stock = atoi(cell);
     product_count++;
   }
 }
