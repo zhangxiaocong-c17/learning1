@@ -101,6 +101,10 @@ int main()
       {
         printf("%-12s%-4s%6.2f %d\n", product[i].name, product[i].code, product[i].price, product[i].stock);
       }
+      if (mode == 1)
+      {
+        printf("admin");
+      }
     }
     else // 判断模式
     {
@@ -206,8 +210,10 @@ void cashier() // 店员模式
 }
 void admin() // 管理员模式
 {
+  success = 0;
   if (strcmp(cmd, "back") == 0)
   {
+    success = 1;
     printf("Bye.\n");
     mode = 0;
   }
@@ -216,28 +222,33 @@ void admin() // 管理员模式
     if (strcmp(cmd, "setprice") == 0)
     {
       setprice();
+      success = 1;
     }
     else if (strcmp(cmd, "itemadd") == 0)
     {
       itemadd();
+      success = 1;
     }
     else if (strcmp(cmd, "itemdel") == 0)
     {
       itemdel();
+      success = 1;
     }
     else if (strcmp(cmd, "restock") == 0)
     {
       restock();
+      success = 1;
     }
     else if (strcmp(cmd, "setstock") == 0)
     {
       setstock();
+      success = 1;
+    }
+    if (success == 0) // 命令不存在报错
+    {
+      printf("ERROR: code not found\n");
     }
     printf("admin");
-    for (int i = 0; i <= product_count - 1; i++) // 显示库存
-    {
-      printf("name:%s\nstock:%d", product[i].name, product[i].stock);
-    }
   }
 }
 void output() // 扫描时实时计算、输出价格
@@ -268,11 +279,11 @@ void receipt() // 计算输出总价
 {
   pricetotal = 0;
 
-  for (int i = 0; i <= product_count - 1 ; i++)
+  for (int i = 0; i <= product_count - 1; i++)
   {
     if (product[i].stock - count[i] >= 0)
     {
-    pricetotal = pricetotal + priceproduct[i];
+      pricetotal = pricetotal + priceproduct[i];
     }
   }
   printf("Receipt\n"
@@ -282,11 +293,9 @@ void receipt() // 计算输出总价
   {
     if (count[i] > 0 && product[i].stock - count[i] >= 0)
     {
-    printf("%-9s%5.2f x%-2d=%.2f\n", product[i].name, product[i].price, count[i], priceproduct[i]); 
-    product[i].stock = product[i].stock - count[i];
-  
+      printf("%-9s%5.2f x%-2d=%.2f\n", product[i].name, product[i].price, count[i], priceproduct[i]);
+      product[i].stock = product[i].stock - count[i];
     }
-      
   }
   printf("-------------------------\n");
   printf("Total             =%.2f\n", pricetotal);
@@ -294,16 +303,16 @@ void receipt() // 计算输出总价
   {
     if (count[i] > 0)
     {
-    if (product[i].stock - count[i] <0)
-    {
-    printf("ERROR: out of stock(%s):%d\n", product[i].name, product[i].stock);
+      if (product[i].stock - count[i] < 0)
+      {
+        printf("ERROR: out of stock(%s):%d\n", product[i].name, product[i].stock);
+      }
+      if (product[i].stock - count[i] >= 0)
+      {
+        printf("remain(%s): %d\n", product[i].name, product[i].stock);
+      }
     }
-    if (product[i].stock - count[i] >=0)
-    {
-    printf("remain(%s): %d\n", product[i].name, product[i].stock);
-    }
-    }
-  }  
+  }
 }
 void drop() // 清空记录
 {
@@ -387,7 +396,6 @@ void read(int day) // 从文件中读取物品信息
 void setprice() // 修改商品价格
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s\n", cmd);
   char cmd_code[10];
   strcpy(cmd_code, cmd);
   cmd = strtok(NULL, " \n\t");
@@ -400,28 +408,44 @@ void setprice() // 修改商品价格
       break;
     }
   }
-  printf("newprice:%s\n", cmd);
+  printf("Price updated.\n");
+  for (int i = 0; i <= product_count - 1; i++)
+  {
+    if (strcmp(cmd_code, product[i].code) == 0)
+    {
+      printf("New price of %s(%s): %.2f\n", product[i].name, product[i].code, product[i].price);
+      break;
+    }
+  }
+  // printf("newprice of %s :%s\n",cmd_code, cmd);
   savechanges();
 }
 void itemadd() // 添加新商品
 {
+  /*之所以这里使用product.count，是因为数量恰好比最大编号多1
+  在数量还没增加的时候，原有数量就是新的最大编号*/
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s\n", cmd);
   strcpy(product[product_count].code, cmd);
   cmd = strtok(NULL, " \n\t");
-  printf("name:%s\n", cmd);
   strcpy(product[product_count].name, cmd);
   cmd = strtok(NULL, " \n\t");
-  printf("price:%s\n", cmd);
   float cmd_price = atof(cmd);
   product[product_count].price = cmd_price;
+  printf("%s(%s) added.\nPrice:%.2f\n", product[product_count].name, product[product_count].code, product[product_count].price);
   product_count++;
   savechanges();
 }
 void itemdel() // 删除商品
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s", cmd);
+  for (int i = 0; i <= product_count - 1; i++)
+  {
+    if (strcmp(product[i].code, cmd) == 0)
+    {
+      printf("%s(%s) removed.\n", product[i].name, product[i].code);
+      break;
+    }
+  }
   product_count--;
   for (int i = 0; i <= product_count - 1; i++)
   {
@@ -451,11 +475,12 @@ void savechanges() // 保存对商品信息的改动
 void setstock() // 设置库存
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s\n", cmd);
+  printf("Stock updated.\ncode:%s\n", cmd);
   char cmd_code[10];
   strcpy(cmd_code, cmd);
   cmd = strtok(NULL, " \n\t");
   int cmd_stock = atoi(cmd);
+  printf("stock:%d\n", cmd_stock);
   for (int i = 0; i <= product_count - 1; i++)
   {
     if (strcmp(cmd_code, product[i].code) == 0)
@@ -469,7 +494,7 @@ void setstock() // 设置库存
 void restock() // 增加库存
 {
   cmd = strtok(NULL, " \n\t");
-  printf("code:%s\n", cmd);
+  printf("Stock updated.\ncode:%s\n", cmd);
   char cmd_code[10];
   strcpy(cmd_code, cmd);
   cmd = strtok(NULL, " \n\t");
@@ -479,6 +504,7 @@ void restock() // 增加库存
     if (strcmp(cmd_code, product[i].code) == 0)
     {
       product[i].stock = product[i].stock + cmd_stock;
+      printf("stock:%d\n", product[i].stock);
       break;
     }
   }
