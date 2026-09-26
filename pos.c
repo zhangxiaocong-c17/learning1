@@ -44,6 +44,8 @@ void savechanges();           // 保存文件修改
 void setstock();              // 更改商品库存
 void restock();               // 增加商品库存
 void setpwd();                // 修改密码
+unsigned long hash_password;
+unsigned long djb2_hash(const char *str);//将字符串转化为哈希值
 
 void setinfo() // 设置商品价格、名称等信息
 {
@@ -84,8 +86,8 @@ int main()
   fp = fopen("sales.csv", "w+");
   fprintf(fp, "No.,Time,Items,Ament\n");
   fclose(fp);
-  fp = fopen("password.txt", "r");
-  fgets(password,50,fp);
+  fp = fopen("password_hash.txt", "r");
+  fscanf(fp,"%lu",&hash_password);
   getinfo();
   while (1)
   {
@@ -139,7 +141,7 @@ void cashier() // 店员模式
     printf("Password:");
     fgets(input, sizeof(input), stdin);
     cmd = strtok(input, "\t\n");
-    if (strcmp(cmd, password) == 0) // 校验密码
+    if (djb2_hash(cmd) == hash_password) // 校验密码
     {
       printf("Admin mode.\n");
       mode = 1;
@@ -527,7 +529,7 @@ void restock() // 增加库存
   }
   savechanges();
 }
-void setpwd()
+void setpwd()//设置密码
 {
   printf("Enter new password:");
   fgets(input, sizeof(input), stdin);
@@ -541,12 +543,21 @@ void setpwd()
   {
     printf("Password updated.\n");
     strcpy(password,cmd_pwd);
-    fp = fopen("password.txt", "w");
-    fprintf(fp,"%s",password);
+    fp = fopen("password_hash.txt", "w");
+    fprintf(fp,"%lu",djb2_hash(password));
     fclose(fp);
+    hash_password = djb2_hash(password);
   }
   else
   {
     printf("Passwords do not match.\n");
   }
+}
+unsigned long djb2_hash(const char *str) {
+    unsigned long hash = 5381; 
+    int c;
+    while ((c = *str++)) {
+        hash = ((hash << 5) + hash) + c; 
+    }
+    return hash;
 }
