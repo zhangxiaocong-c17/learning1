@@ -148,6 +148,7 @@ void cashier() // 店员模式
     localtime(&rawtime);
     struct tm *t = localtime(&rawtime);
     receipt();
+    savechanges();
     getitems();
     fprintf(fp, "%d,%02d:%02d:%02d,%s,%.2f\n", serial_number, t->tm_hour, t->tm_min, t->tm_sec, item, pricetotal);
     serial_number++;
@@ -269,7 +270,7 @@ void receipt() // 计算输出总价
 
   for (int i = 0; i <= product_count - 1 ; i++)
   {
-    if (product[i].stock - product[i].stock >= 0)
+    if (product[i].stock - count[i] >= 0)
     {
     pricetotal = pricetotal + priceproduct[i];
     }
@@ -279,22 +280,30 @@ void receipt() // 计算输出总价
          "-------------------------\n");
   for (int i = 0; i <= product_count - 1; i++)
   {
-    if (count[i] > 0 && product[i].stock - product[i].stock >= 0)
+    if (count[i] > 0 && product[i].stock - count[i] >= 0)
     {
-    printf("%-9s%5.2f x%-2d=%.2f\n", product[i].name, product[i].price, count[i], priceproduct[i]);
-  
+    printf("%-9s%5.2f x%-2d=%.2f\n", product[i].name, product[i].price, count[i], priceproduct[i]); 
     product[i].stock = product[i].stock - count[i];
-    printf("remain(%s): %d\n", product[i].name, product[i].stock);
+  
     }
-    else if (product[i].stock - product[i].stock <0)
-    {
-    printf("ERROR: out of stock\nstock(%s):%d\n", product[i].name, product[i].stock);
-    }
-    mark[i] = 0;
-    
+      
   }
   printf("-------------------------\n");
   printf("Total             =%.2f\n", pricetotal);
+  for (int i = 0; i <= product_count - 1; i++)
+  {
+    if (count[i] > 0)
+    {
+    if (product[i].stock - count[i] <0)
+    {
+    printf("ERROR: out of stock(%s):%d\n", product[i].name, product[i].stock);
+    }
+    if (product[i].stock - count[i] >=0)
+    {
+    printf("remain(%s): %d\n", product[i].name, product[i].stock);
+    }
+    }
+  }  
 }
 void drop() // 清空记录
 {
