@@ -379,10 +379,6 @@ void read(int day) // 从文件中读取物品信息
     cell = strtok(NULL, "\n\t,");
     printf("%8s", cell); // 时间
     cell = strtok(NULL, "\n\t,");
-    // for(int i = 0; cell[i] != 0; i++ )
-    //{
-    //   if (cell[i] == ';'){cell[i] = '\n';}
-    // }
     printf("  %s", cell); // 数量
     cell = strtok(NULL, "\n\t,");
     printf("%s\n", cell); // 总价
