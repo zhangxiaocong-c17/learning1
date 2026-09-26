@@ -84,6 +84,8 @@ int main()
   fp = fopen("sales.csv", "w+");
   fprintf(fp, "No.,Time,Items,Ament\n");
   fclose(fp);
+  fp = fopen("password.txt", "r");
+  fgets(password,50,fp);
   getinfo();
   while (1)
   {
@@ -539,6 +541,9 @@ void setpwd()
   {
     printf("Password updated.\n");
     strcpy(password,cmd_pwd);
+    fp = fopen("password.txt", "w");
+    fprintf(fp,"%s",password);
+    fclose(fp);
   }
   else
   {
