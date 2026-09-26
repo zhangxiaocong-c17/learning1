@@ -93,13 +93,14 @@ int main()
     {
       break;
     }
-    else if (strcmp(cmd, "prices") == 0) // 查询价格
+    else if (strcmp(cmd, "prices") == 0) // 查询价格与库存
     {
-      printf("Item     No. Pri.\n"
-             "-----------------\n"
-             "Cola     001 3.50\n"
-             "Lollipop 002 0.50\n"
-             "Noodles  003 6.00\n");
+      printf("Item        No.   Pri. Stock\n"
+             "----------------------------\n");
+      for(int i=0;i<=product_count - 1; i++)
+      {
+        printf("%-12s%-4s%6.2f %d\n",product[i].name,product[i].code,product[i].price,product[i].stock);
+      }
     }
     else // 判断模式
     {
