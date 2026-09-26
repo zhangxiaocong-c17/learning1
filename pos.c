@@ -434,29 +434,26 @@ void itemadd() // 添加新商品
 }
 void itemdel() // 删除商品
 {
-  cmd = strtok(NULL, " \n\t");
-  for (int i = 0; i <= product_count - 1; i++)
+  int found = -1;
+  for (int i = 0; i < product_count; i++)
   {
     if (strcmp(product[i].code, cmd) == 0)
     {
-      printf("%s(%s) removed.\n", product[i].name, product[i].code);
+      found = i;
       break;
     }
+  }
+  if (found == -1)
+  {
+    printf("ERROR: code not found\n");
+    return;
+  }
+  printf("%s(%s) removed.\n", product[found].name, product[found].code);
+  for (int i = found; i < product_count - 1; i++)
+  {
+    product[i] = product[i + 1];
   }
   product_count--;
-  for (int i = 0; i <= product_count - 1; i++)
-  {
-    if (strcmp(cmd, product[i].code) == 0)
-    {
-      for (int ii = i; ii <= product_count - 1; ii++)
-      {
-        strcpy(product[ii].name, product[ii + 1].name);
-        strcpy(product[ii].code, product[ii + 1].code);
-        product[ii].price = product[ii + 1].price;
-      }
-      break;
-    }
-  }
   savechanges();
 }
 void savechanges() // 保存对商品信息的改动
@@ -531,7 +528,7 @@ void setpwd() // 设置密码
     printf("Passwords do not match.\n");
   }
 }
-unsigned long djb2_hash(const char *str)//将字符串转化为哈希值
+unsigned long djb2_hash(const char *str) // 将字符串转化为哈希值
 {
   unsigned long hash = 5381;
   int c;
