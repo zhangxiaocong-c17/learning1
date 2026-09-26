@@ -86,12 +86,13 @@ int main()
   getinfo();
   while (1)
   {
+    success = 0;
     printf("> ");
     fgets(input, sizeof(input), stdin);
     cmd = strtok(input, " \t\n");
     if (cmd == NULL)
     {
-      if(mode == 1)
+      if (mode == 1)
       {
         printf("admin");
       }
@@ -139,6 +140,7 @@ void cashier() // 店员模式
     {
       printf("Admin mode.\n");
       mode = 1;
+      success = 1;
     }
     else
     {
@@ -218,7 +220,6 @@ void cashier() // 店员模式
 }
 void admin() // 管理员模式
 {
-  success = 0;
   if (strcmp(cmd, "back") == 0)
   {
     success = 1;
